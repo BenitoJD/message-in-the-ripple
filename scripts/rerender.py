@@ -36,7 +36,7 @@ def main() -> None:
     p.add_argument("--out", default="results")
     p.add_argument("--frames", type=int, default=None)
     p.add_argument("--upscale", type=int, default=1)
-    p.add_argument("--gif-upscale", type=int, default=2)
+    p.add_argument("--gif-upscale", type=int, default=1, help="1 keeps the committed GIF small; 2 for a larger preview")
     p.add_argument("--display-dev", type=float, default=None)
     a = p.parse_args()
 
