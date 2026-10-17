@@ -1,0 +1,13 @@
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mplconfig/
+
+# local outputs that are not part of the committed result set
+results/tmp/
+scratch/
+.DS_Store

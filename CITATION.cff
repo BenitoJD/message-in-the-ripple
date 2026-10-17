@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this simulation or build on the experiment, please cite the repository."
+title: "Message in the Ripple"
+abstract: >-
+  A simulation-first study of transient caustic glyphs: a single finite
+  mechanical launch imprints a water surface, free gravity-capillary wave
+  propagation carries the disturbance to a designed instant t*, and the light
+  refracted through the momentarily shaped surface assembles into a chosen
+  symbol before dispersing. Includes a differentiable forward model
+  (linear gravity-capillary waves + Snell refraction with bilinear splatting),
+  a three-stage inverse design (static caustic design, time reversal,
+  constrained launch optimization), and a plan for a physical rig.
+authors:
+  - family-names: "JD"
+    given-names: "Benito"
+type: software
+license: MIT
+repository-code: "https://github.com/BenitoJD/message-in-the-ripple"
+keywords:
+  - caustics
+  - water waves
+  - inverse design
+  - differentiable simulation
+  - time reversal
