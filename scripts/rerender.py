@@ -37,6 +37,7 @@ def main() -> None:
     p.add_argument("--frames", type=int, default=None)
     p.add_argument("--upscale", type=int, default=1)
     p.add_argument("--gif-upscale", type=int, default=1, help="1 keeps the committed GIF small; 2 for a larger preview")
+    p.add_argument("--gif-out", default=None, help="write the GIF here instead of <out>/reveal.gif (use for post-sized exports)")
     p.add_argument("--display-dev", type=float, default=None)
     a = p.parse_args()
 
@@ -73,7 +74,8 @@ def main() -> None:
         i_star = int(np.argmin(np.abs(times - t_star)))
 
     disp = [viz.relative(f, dev) for f in frames]
-    viz.save_gif(disp, str(out / "reveal.gif"), fps=12, upscale=a.gif_upscale, vmin=0.0, vmax=1.0)
+    gif_path = a.gif_out or str(out / "reveal.gif")
+    viz.save_gif(disp, gif_path, fps=12, upscale=a.gif_upscale, vmin=0.0, vmax=1.0)
     viz.save_grid(
         disp, str(out / "reveal_timeline.png"), ncols=7, upscale=a.upscale,
         labels=[f"t={t:.2f}s" for t in times], vmin=0.0, vmax=1.0,

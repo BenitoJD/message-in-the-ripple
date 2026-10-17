@@ -1,231 +1,136 @@
 # Announcement copy (X / Twitter)
 
-Drafts for posting this project. All lengths verified against X's rules (a link
-counts as 23 characters; media does not count). X Premium allows long posts, so
-the long-form drafts below are written for that; the single posts and thread are
-kept for quote-posts and replies.
+Copy for posting this project. Written for X Premium long posts; the single
+posts and thread are kept for quote posts and replies. No em dashes anywhere,
+on request. Lengths are raw characters (X counts a link as 23, so the real
+count is a little lower than shown).
 
 ## Posting plan
 
 | slot | media | why |
 |---|---|---|
-| main post | `results/flower8/reveal.gif` | one moving image tells the whole story; it loops twice, so "same splash, same image" reads without explanation |
-| reply / second image | `results/contrast_trap.png` | the honest-science beat: the same frame stretched, honest, and zoomed to the real 0.6 % ripple |
-| optional | `results/outline/reveal_timeline.png` | the 28-frame story in one glance |
+| main post | `results/flower8/reveal.gif` | one moving image tells the whole story, and it loops twice, so "same splash, same image" reads without explanation |
+| reply, second image | `results/contrast_trap.png` | the honest science beat: the same frame stretched, honest, and zoomed to the real 0.6% ripple |
+| optional | `results/outline/reveal_timeline.png` | the 28 frame story in one glance |
 | optional | `results/flower_targets.png` | shows the target is a knob (5, 6, 8 petals) |
+
+Export a post sized GIF (768 px, gitignored, does not touch the committed one):
+
+```bash
+.venv/bin/python scripts/rerender.py --tag flower8 --gif-upscale 4 \
+    --gif-out results/tmp/flower8_reveal_768.gif
+```
 
 **Alt text**
 
-* `flower8/reveal.gif` — Animation of 28 simulated caustic frames. Chaotic networks of light assemble into a crisp 8-petal flower shape at one instant, then dissolve back into chaos; the sequence repeats once.
-* `contrast_trap.png` — Three panels of the same simulated caustic frame. Left, min-max stretched, showing an apparent image. Middle, shown on a fixed plus/minus 25 percent brightness window, appears completely flat uniform gray. Right, zoomed to plus/minus 0.6 percent, reveals the faint heart-shaped structure that is really there.
-* `outline/reveal_timeline.png` — Contact sheet of 28 caustic frames; one frame at 0.55 seconds shows a bright heart outline, the surrounding frames show unrelated caustic networks.
-* `flower_targets.png` — Four panels of target shapes: 5, 6 and 8-petal flower outlines and a filled 6-petal flower.
+* `flower8/reveal.gif`: Animation of 28 simulated caustic frames. Chaotic networks of light assemble into a crisp 8-petal flower shape at one instant, then dissolve back into chaos. The sequence repeats once.
+* `contrast_trap.png`: Three panels of the same simulated caustic frame. Left, min-max stretched, showing an apparent image. Middle, on a fixed plus or minus 25 percent brightness window, appears completely flat gray. Right, zoomed to plus or minus 0.6 percent, reveals the faint heart-shaped structure that is really there.
+* `outline/reveal_timeline.png`: Contact sheet of 28 caustic frames. One frame at 0.55 seconds shows a bright heart outline; the surrounding frames show unrelated caustic networks.
+* `flower_targets.png`: Four panels of target shapes: 5, 6 and 8 petal flower outlines, and a filled 6 petal flower.
 
 ---
 
-# LONG-FORM POST A — recommended (4826 chars)
+# LONG POST (recommended, 5577 chars)
 
 ```
-One splash of water. Then you walk away.
+So I've been trying to make water draw a flower.
 
-Half a second later the ripples bend the light into an 8-petal flower on the screen below. It holds for 11 milliseconds. Then the water forgets.
+Here's the setup. Shallow tray of water, clear bottom, lamp above, white screen underneath. Every ripple is a little lens, so the screen shows that wobbling net of light you see on the bottom of a swimming pool.
 
-We simulated it. Nobody has built it. And it fooled us once, badly.
+Normally it's just noise. But if you poke the water once, in exactly the right way, and then leave it completely alone, then half a second later the ripples happen to line up so that the light draws a flower on the screen. It lasts about 11 milliseconds, then it's gone.
 
-THE SETUP
+I simulated it. Nobody has built it. And I got fooled by my own pretty picture along the way, which is honestly the best part of the story.
 
-A shallow tray of water with a clear bottom, a lamp above it, a matte screen below. Every ripple acts like a tiny lens, so the screen shows caustics — the same moving net of light you see on the bottom of a swimming pool.
+THE PART THAT MATTERS
 
-Normally that net is noise. The idea here: poke the water once, in one carefully chosen pattern, and then never touch it again. If the poke is right, the freely evolving wave field is shaped — at one instant — like the picture you want, and the light does the drawing.
+The flower is not in the poke. I checked.
 
-Measured, for the flower: the poke by itself scores 0.06 against the target. The freely evolved water at t* = 0.55 s scores 0.83.
+The splash's own light pattern scores 0.06 against the target. The water at 0.55 seconds scores 0.83. A random poke scores 0.00.
 
-The image is not in the poke. It is assembled by the water's own motion.
+So the picture really does come from the water moving on its own. That's the whole idea, and it's the thing I most expected to be wrong.
 
-WHY THIS IS HARD
+WHY IT'S HARD
 
-You cannot tell water "draw a flower". Thousands of coupled ripples, all dispersing: different wavelengths travel at different speeds, so any pattern smears itself out. The predicted legible window is 11 ms — one frame at 90 fps, if you are lucky.
+Two reasons.
 
-Two tricks make it tractable:
+Water disperses. Long ripples travel faster than short ones, so any pattern you write into the water smears itself out within a few hundred milliseconds. The flower is legible for about 11 ms. Blink and you miss it. A strobe light won't.
 
-1. Run time backwards. Ignoring viscosity, the wave equation is reversible, so we propagate the target picture backwards from t* to t = 0 and obtain an ideal splash. Round-trip check: error 1.2e-16.
+And you can't tell water "draw a flower". There's no formula for it. So I did two things.
 
-2. Project, then optimize. That ideal splash is not something hardware can produce, so we fit it onto a 32x32 actuator grid (74-96% shape fidelity), then optimize the actuators end to end.
+First, I ran the wave equation backwards. Ignore viscosity and the equation is reversible, so I took the flower shape I wanted, put it on the water at t = 0.55 s, and propagated it back to the start. That gives a splash that would evolve into the flower. Round trip error: 1.2e-16. Viscosity is what breaks this, which is exactly what you would expect. The arrow of time, showing up in a tray of water.
 
-"End to end" is the interesting part: the gradient of "how much does this look like the flower" flows backwards through the wave propagation and through the refraction, into every single actuator. The propagator is closed-form — two FFTs per instant — and the optics is a differentiable ray trace. The entire chain is one autodiff program.
+Second, I made that ideal splash buildable. On its own it isn't, so I fit it onto a 32x32 grid of little actuators (0.74 to 0.96 shape match, depending on the target), then let a computer tune the grid.
 
-WHAT WE MEASURED (all in simulation)
+The tuning is the part I like. The gradient of "does this look like the flower" flows backwards through the wave simulation and through the light bending, into every actuator. The computer isn't guessing. It's following the physics backwards.
 
-• 8-petal flower: correlation 0.83, screen brightness modulation 12.8%, visible for 11 ms
-• 6-petal flower: 0.82 and 12.6%
-• heart outline: 0.81 (0.87 with a longer throw)
-• solid filled heart: 0.41
+Technically: the wave propagator is closed form, two FFTs per instant, and the ray tracing is differentiable. The whole thing runs on a laptop CPU in a few minutes.
 
-Caustics love lines and hate filled shapes. Outlines of flowers and hearts come out crisp; a solid shape comes out mushy.
+WHAT I MEASURED
 
-Hardware floor: 64 actuators fail, 256 work, 1024 give the numbers above.
+8 petal flower: 0.83 correlation, 12.8% brightness modulation, visible for 11 ms
+6 petal flower: 0.82
+Heart outline: 0.87 with a longer throw, 0.81 with a short one
+Filled heart: 0.41
 
-And it is deterministic — two evaluations of the same splash are bit-identical. That matters, because the entire conceit is "repeat the splash and the image returns at the same moment."
+That last pair is the interesting one. Caustics are made of bright lines, so they love outlines and hate solid shapes. A flower outline is easy for physics like this. A solid heart is not.
 
-HOW IT FOOLED US
+Hardware: 64 actuators is not enough. 256 works. 1024 gets the numbers above.
 
-The first version of this pipeline reported correlation 0.79 and rendered a gorgeous heart.
+And it repeats. Two runs of the same splash are identical, bit for bit. That matters, because the whole point is that the image comes back at the same moment every time.
 
-Then we checked the actual brightness modulation: 0.5%. And the focusing parameter: 0.005, meaning no focusing whatsoever.
+HOW I FOOLED MYSELF
 
-The "image" was an invisible shimmer. Our display code had been min-max normalizing each frame, which stretches a 0.5% ripple into full black-and-white. The figure below is that exact frame: stretched it looks like a picture, on an honest fixed window it is flat gray, and only at ±0.6% does the real structure appear.
+The first version of this thing reported 0.79 correlation and produced a genuinely beautiful heart. I was quite pleased with myself.
 
-Root cause: Pearson correlation is contrast-blind. It scores shape, not visibility — so the optimizer happily converged on structure no eye could see.
+Then I measured how bright it actually was. 0.5%. And the focusing number: 0.005, which is basically nothing. The "image" was a shimmer you could not see. My own display code had been stretching every frame to full black and white, so a 0.5% ripple looked like a photograph.
 
-Fixes: a minimum-contrast term in the loss; contrast and focusing reported next to every correlation; and every committed image shown on a fixed ±25% window. The numbers went down and became real. The diagnostic that caught it is still in the repo as a tripwire.
+The figure below is that exact frame. Stretched, it looks like a picture. On an honest fixed window it's flat gray. Zoom in to plus or minus 0.6% and you can see the heart really is there, just far too faint to matter.
 
-STILL UNKNOWN
+What went wrong: I was scoring with correlation, and correlation does not care about brightness at all. It only asks whether the shape matches. So the optimizer happily found shapes no eye could see, and I happily showed them off.
 
-Simulation only. Linear waves, a periodic box instead of walls, an idealized launcher with no splash or crater physics, geometric optics, no camera. The wave-constrained designs are comfortably linear (surface slopes ~0.09), but that is a model result, not a measurement.
+Fixed it by adding a brightness requirement to the score, reporting brightness and focusing next to every correlation, and showing every image on a fixed window. The numbers got worse and real. The check that caught it is still in the repo.
 
-Prior art: static computational caustics is a mature field. Water-wave time reversal is real — Bacot et al., Nature Physics 2016 — but it refocuses waves onto a source rather than drawing an image. Water displays drive the water continuously rather than once. The combination — one finite launch, free propagation, a structured image, solved inversely — I could not find. If you know of it, please tell me.
+WHAT I DON'T KNOW
 
-WHY BUILD IT
+It's all simulation. Linear waves, a box with no walls, an idealised splash with no crater and no droplets, simple ray optics, no camera. The designs sit comfortably in the linear regime (surface slopes around 0.09), but that's the model talking, not a measurement.
 
-The rig is cheap: tray, LED panel, matte screen, phone camera, microcontroller — roughly $150-500. The reveal is a visible ~13% brightness modulation, and the design pipeline runs on a CPU in minutes.
+Prior art: static caustic design is a whole field, you can 3D print a lens that makes an image. Time reversal of water waves is real, Bacot et al in Nature Physics 2016, but they refocus waves back onto a source rather than drawing a picture. Water displays drive the water continuously, not once. I could not find anyone doing all four at once: one splash, free propagation, a real image, solved backwards. If you know of work like this, please tell me. I would rather find out now.
 
-Repo: theory, the focusing scaling law, the bill of materials, the bench protocol, and the negative results.
+WHY I THINK IT'S WORTH BUILDING
+
+It's cheap. Tray, LED panel, matte screen, phone camera, microcontroller. Somewhere between 150 and 500 dollars. The reveal is a 13% brightness change, which a phone camera can easily see. The design runs on a CPU.
+
+And the next step is not the actuators. It's one droplet and a camera. Measure how ripples actually move in a real tray. If the dispersion matches what I assumed, the rest is engineering. If it doesn't, the idea dies cheaply, which is the best way for an idea to die.
+
+Everything is here, including the negative results:
 
 github.com/BenitoJD/message-in-the-ripple
 
-The next step is not the actuators. It is one droplet and a camera: measure the dispersion of the actual tray, and find out whether the predicted 0.55 s timeline is real.
+Corrections and collaborators welcome.
 ```
 
 ---
 
-# LONG-FORM POST B — extended, for a technical audience (7859 chars)
+# SINGLE POST
 
-```
-One splash of water. Then you walk away.
-
-Half a second later the ripples bend the light into an 8-petal flower on the screen below. It holds for 11 milliseconds. Then the water forgets.
-
-We simulated it. Nobody has built it. Here is the whole story, including the way the project fooled us first.
-
-1. THE IDEA
-
-A shallow tray, clear flat bottom, lamp above, matte screen below. Ripples are lenses, so the screen shows caustics — the light-net on the bottom of a swimming pool.
-
-Now: instead of driving the water continuously (what fountain displays do), poke it once and let go. The disturbance spreads, interferes, disperses — and if the poke was chosen correctly, the surface at one instant is the right shape for the light to draw a picture. Then the picture dissolves on its own.
-
-The research question is uncomfortable: can a finite, buildable poke do this, or does it need more control than hardware can offer?
-
-2. WHY THE PICTURE IS NOT IN THE POKE
-
-We measured it. For the 8-petal flower, the splash's own caustic at t = 0 scores 0.06 against the target. The freely evolved surface at t* = 0.55 s scores 0.83. An untuned random launch scores 0.00.
-
-So the image genuinely comes from the propagation, not from the imprint. This is the control that makes the whole thing interesting rather than a printing trick.
-
-3. WHY IT'S HARD
-
-Water disperses. Modes obey
-
-  w^2 = (g k + (sigma/rho) k^3) tanh(k h)
-
-with gravity and capillarity both mattering at centimetre scales. Different wavelengths travel at different speeds, so a pattern decorrelates in a few hundred milliseconds. Measured legible window for the flower: 11 ms; for the softer filled-heart target, 51 ms.
-
-The second hardness is the inverse problem: you cannot tell water "draw a flower".
-
-4. HOW WE SOLVED THE INVERSE PROBLEM
-
-Three stages, each more physically honest than the last.
-
-A. Static design. Let the surface at t* be arbitrary and optimize it so its caustic is the target. This is classical computational caustics (Schwartzburg et al. 2014 and successors). It validates the optics and gives a reference: corr 0.87 for the flower outline, 0.47 for the filled heart.
-
-B. Time reversal. The undamped wave equation is reversible. Put the designed surface at t* with zero velocity (the field passes through its shape, momentarily at rest), then propagate backwards to t = 0. The result is an ideal splash that would evolve into the picture. Inviscid round-trip error: 1.2e-16. Under viscosity reversal is inexact (~0.3 relative error at 0.5 s), which is the physical arrow of time and the reason we do not rely on reversal alone.
-
-C. Reverse-and-project, then optimize. The ideal splash is not buildable. So we fit it onto a coarse actuator grid (cosine similarity 0.74-0.96 depending on target), then optimize the actuator amplitudes end to end.
-
-End to end means the gradient of image quality at t* flows back through the wave propagation and the ray-traced refraction into every actuator. The propagator is closed-form in time (two FFTs per instant), the optics uses vector Snell refraction with differentiable bilinear splatting, so the entire chain is a single autodiff program. A run is minutes on a laptop CPU.
-
-5. WHAT WE MEASURED
-
-  target                        actuators   corr@t*   contrast   window
-  8-petal flower outline        32x32       0.833     12.8%      11 ms
-  6-petal flower outline        32x32       0.824     12.6%      11 ms
-  heart outline (20 cm throw)   32x32       0.866     12.7%      11 ms
-  heart outline (12 cm throw)   32x32       0.812     11.9%      11 ms
-  filled heart                  32x32       0.413     11.6%      51 ms
-  filled heart                  16x16       0.402     10.2%      51 ms
-  filled heart                  8x8         0.705      0.6%     405 ms
-  filled heart, 8x8, penalty x10 8x8        0.104     14.8%     557 ms
-
-Patterns worth reading off that table:
-
-• Caustics love lines, hate filled shapes. Outlines of flowers and hearts: 0.81-0.87. Solid hearts: 0.41. Fold lines are what a caustic wants to make anyway.
-
-• There is an actuator floor. 64 actuators cannot express the required surface curvature. Asked for shape alone, that grid reports a flattering 0.705 at 0.6% contrast — invisible. Enforce visibility ten times harder and it produces a bright 14.8% pattern at 0.104 — light, but not the glyph. 256 actuators work; 1024 work better.
-
-• Throw buys fidelity, not brightness. Going from a 12 cm to a 20 cm screen distance raised correlation from 0.812 to 0.866 at the same contrast and the same focusing parameter. The visibility requirement pins the curvature budget; extra throw spends it on shape.
-
-• It is deterministic. Two evaluations of the same launch are bit-identical.
-
-6. HOW IT FOOLED US
-
-The first version reported correlation 0.79 and rendered a beautiful heart.
-
-Then we checked the brightness modulation: 0.5%. And the focusing parameter chi: 0.005 — no focusing at all. The "image" was an invisible shimmer, and our own display code had been min-max stretching every frame, turning a 0.5% ripple into full black-and-white.
-
-The failure mode is general and worth naming: Pearson correlation is contrast-blind. It measures shape agreement, not visibility, so an optimizer scored by correlation will happily design something no eye can see.
-
-What we changed: a minimum-contrast term in the loss, contrast and the focusing parameter reported next to every correlation, and every committed image shown on a fixed ±25% window. The numbers dropped and became real.
-
-We also verified the surviving result is not a rendering artifact: re-rendering the same surface from 1 to 16 rays per cell, with correct pixel-area integration, moves correlation only from 0.809 to 0.800 and contrast from 0.118 to 0.116.
-
-7. THE PHYSICS IN ONE PARAGRAPH
-
-A surface slope s deflects a vertical ray by about (n-1)s in air, giving a lateral displacement (n-1) L_eff s at the screen, where L_eff = gap + 0.75 x depth. Focusing therefore scales with one dimensionless number:
-
-  chi = (n-1) L_eff rms(laplacian of eta)
-
-chi below ~0.01 is an invisible ripple; 0.1 to 1 is a visible image; far above 1 is speckle that blur washes out. With a 12 cm throw, chi ~ 0.1 needs centimetre-scale ripples with fractions of a millimetre of amplitude — exactly the gravity-capillary band, and why decimetre waves cannot paint a sharp image at a table-top throw.
-
-8. WHAT IS STILL UNKNOWN
-
-Simulation only. Linear waves in a periodic box (no wall reflections), an idealized launcher (no splash or crater physics), geometric optics (no diffraction), no camera, no measurement. The wave-constrained designs sit comfortably inside linear theory (surface slopes ~0.09), but that is a model result.
-
-Prior art: static computational caustics is mature; water-wave time reversal is real (Bacot et al., Nature Physics 2016) but refocuses onto a source rather than drawing an image; water displays drive the water continuously. The four-way combination — one finite launch, free propagation, a spatially structured image, designed inversely — I could not find. If you know it exists, please tell me.
-
-9. WHY IT MIGHT BE WORTH BUILDING
-
-The rig is cheap ($150-500): tray, LED, matte screen, phone camera, microcontroller. The reveal is a visible ~13% brightness modulation, an order of magnitude above what a phone camera resolves. The design pipeline is CPU-only and takes minutes.
-
-The next step is not the actuator bed. It is one droplet and a camera: measure the tray's actual dispersion, and see whether the predicted timeline is real. If the dispersion matches, the rest is engineering. If it does not, the idea dies cheaply.
-
-Everything is here — theory, scaling law, bill of materials, bench protocol, negative results, and the figures:
-
-github.com/BenitoJD/message-in-the-ripple
-
-Corrections, prior art, and collaborators all welcome.
-```
-
----
-
-# SINGLE POST (if you want a short one instead)
-
-**A, numbers-forward (253 chars)**
+**Numbers forward (262 chars)**
 
 ```
 Splash a tray of water once, then walk away.
 
-0.55 s later the ripples bend light into an 8-petal flower on the screen below — for 11 milliseconds — then dispersion erases it.
+0.55 s later the ripples bend light into an 8-petal flower on the screen below, and 11 milliseconds after that it's gone.
 
-Simulated, not built. Code + plan: github.com/BenitoJD/message-in-the-ripple
+I simulated it. Nobody has built it. Code and plan: github.com/BenitoJD/message-in-the-ripple
 ```
 
-**B, punchier (220 chars)**
+**Punchier (214 chars)**
 
 ```
 One splash. No moving parts.
 
-Half a second later the water draws an 8-petal flower in light — and 11 ms after that, it's gone.
+Half a second later the water draws an 8-petal flower in light. 11 ms after that, it's gone.
 
-Nobody has built this yet. We only simulated it.
+Nobody has built this yet. I only simulated it.
 
 github.com/BenitoJD/message-in-the-ripple
 ```
@@ -234,7 +139,7 @@ github.com/BenitoJD/message-in-the-ripple
 
 # THREAD (6 posts)
 
-**1/6** — 221 chars
+**1/6** (220 chars)
 
 ```
 One splash. Then nothing.
@@ -243,55 +148,55 @@ One splash. Then nothing.
 
 Then dispersion erases it.
 
-We simulated it. Nobody has built it. 🧵
+I simulated it. Nobody has built it. 🧵
 ```
 
-**2/6** — 236 chars
+**2/6** (235 chars)
 
 ```
-Why this is strange: the picture is NOT in the splash.
+Why this is strange: the picture is not in the splash.
 
 The splash alone scores 0.06 against the flower. The freely evolving water at t=0.55 s scores 0.83.
 
-The image is assembled by the water's own motion. We only chose how to poke it.
+The image is assembled by the water's own motion. I only chose how to poke it.
 ```
 
-**3/6** — 229 chars
+**3/6** (229 chars)
 
 ```
 You can't tell water "draw a flower".
 
-So we ran the wave equation backwards for an ideal splash, then optimized a 32×32 actuator grid until the forward simulation produced the flower.
+So I ran the wave equation backwards for an ideal splash, then optimized a 32x32 actuator grid until the forward simulation produced the flower.
 
-Waves + light = one differentiable program.
+Waves and light, one differentiable program.
 ```
 
-**4/6** — 165 chars
+**4/6** (164 chars)
 
 ```
 It's also fast. Ripples of different sizes travel at different speeds, so the pattern smears itself out.
 
-Measured legible window: 11 ms — about one frame at 90 fps.
+Measured legible window: 11 ms. About one frame at 90 fps.
 ```
 
-**5/6** — 268 chars
+**5/6** (257 chars)
 
 ```
-How much hardware does it need? We tested:
+How much hardware does it need? I tested:
 
-• 64 actuators — fails: either an invisible shimmer, or a bright blob with no shape
-• 256 — works, corr 0.40
-• 1024 — corr 0.83 at 12.8% contrast
+• 64 actuators: fails. Either an invisible shimmer, or a bright blob with no shape
+• 256: works, corr 0.40
+• 1024: corr 0.83 at 12.8% contrast
 
-Caustics love lines and hate filled shapes: flowers > letters > solid hearts.
+Caustics love lines and hate filled shapes. Flowers beat solid hearts.
 ```
 
-**6/6** — 263 chars
+**6/6** (266 chars)
 
 ```
 Honest status: simulation only. Linear waves, periodic box, no wall reflections, idealized launcher. No tray built.
 
-Repo has the theory, the scaling law, the BOM and the bench protocol — plus prior art I could not find:
+The repo has the theory, the scaling law, the BOM and the bench protocol, plus prior art I could not find:
 
 github.com/BenitoJD/message-in-the-ripple
 ```
@@ -300,20 +205,17 @@ github.com/BenitoJD/message-in-the-ripple
 
 ## Notes
 
-* **The first ~280 characters are the whole pitch** — that is all X shows before
-  "Show more". Both long drafts open with the splash, the 11 milliseconds, and
-  the admission that it is unbuilt.
-* **Keep "nobody has built it".** It is honest and it is the more interesting
-  claim: an unbuilt idea with a shopping list and a test protocol invites
-  collaborators; an overclaim invites a correction.
-* **The contrast trap is the strongest section** for any audience that builds
-  things with optimizers. Correlation is contrast-blind; the repo now reports
-  contrast and the focusing parameter next to every correlation, and the
-  diagnostic that caught it (`scripts/probe_sampling.py`,
-  `scripts/contrast_trap_figure.py`) is part of the codebase.
-* **The failure case is the best technical reply-post**: 64 actuators -> either
-  corr 0.71 at 0.6 % contrast (invisible) or 14.8 % contrast at corr 0.10
-  (shapeless). A clean illustration of an actuator floor.
+* The first 280 characters are the entire pitch, because that is all X shows
+  before "Show more". The long post opens with the splash, the 11
+  milliseconds, and the admission that it is unbuilt.
+* Keep "nobody has built it". It is true, and it is the more interesting
+  claim. An unbuilt idea with a shopping list and a test protocol invites
+  collaborators. An overclaim invites a correction.
+* The section where the project fools itself is the most quotable part. Anyone
+  who has tuned an optimizer against the wrong metric has lived it, and here
+  there is a picture of it.
+* The best technical reply post is the failure case: 64 actuators give either
+  corr 0.71 at 0.6% contrast (invisible) or 14.8% contrast at corr 0.10
+  (shapeless). A clean actuator floor.
 * If someone replies with prior art, that is a win. `docs/RESEARCH_GAP.md`
-  already asks for it.
-* Hashtags optional; `#physics #optics` is plenty. No stuffing.
+  asks for it directly.
