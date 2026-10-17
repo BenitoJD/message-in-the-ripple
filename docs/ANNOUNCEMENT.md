@@ -30,7 +30,7 @@ One splash of water. Then you walk away.
 
 Half a second later the ripples bend the light into an 8-petal flower on the screen below. It holds for 11 milliseconds. Then the water forgets.
 
-We simulated it. Nobody has built it. And it fooled us once, badly. 🧵
+We simulated it. Nobody has built it. And it fooled us once, badly.
 
 THE SETUP
 
@@ -105,7 +105,7 @@ One splash of water. Then you walk away.
 
 Half a second later the ripples bend the light into an 8-petal flower on the screen below. It holds for 11 milliseconds. Then the water forgets.
 
-We simulated it. Nobody has built it. This is the whole story, including the way the project fooled us first.
+We simulated it. Nobody has built it. Here is the whole story, including the way the project fooled us first.
 
 1. THE IDEA
 
