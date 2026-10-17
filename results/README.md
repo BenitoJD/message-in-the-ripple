@@ -21,6 +21,7 @@ different display scale or ray sampling — without re-optimizing:
 | `launch_imprint.png` | the initial state the actuator grid imprints at `t = 0` |
 | `target.png` | the target bitmap the optimization was scored against |
 | `flower_targets.png` | the parametric flower targets (5, 6, 8 petals; outline and filled) |
+| `contrast_trap.png` | the same frame min-max stretched vs shown on an honest fixed window vs zoomed to the real 0.6 % ripple |
 | `launch_params.pt` | actuator amplitudes + full configuration (torch.save) |
 | `metrics.json` | correlations, contrast, `chi`, controls, per-seed history |
 
