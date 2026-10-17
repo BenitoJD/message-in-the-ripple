@@ -20,6 +20,7 @@ different display scale or ray sampling — without re-optimizing:
 | `designed_surface.png`, `designed_caustic.png` | stage A: the ideal (wave-free) surface and the image it makes |
 | `launch_imprint.png` | the initial state the actuator grid imprints at `t = 0` |
 | `target.png` | the target bitmap the optimization was scored against |
+| `flower_targets.png` | the parametric flower targets (5, 6, 8 petals; outline and filled) |
 | `launch_params.pt` | actuator amplitudes + full configuration (torch.save) |
 | `metrics.json` | correlations, contrast, `chi`, controls, per-seed history |
 
@@ -44,6 +45,9 @@ survives finer ray sampling and correct pixel-area integration.
 | `coarse16` | 16×16 actuators (256) — how little hardware is needed |
 | `coarse8` | 8×8 actuators (64) — shows the actuator-count floor |
 | `coarse8_strong` | 8×8 with a 10× heavier contrast penalty, to separate "too few actuators" from "penalty too soft" |
+| `flower` | 6-petal flower outline — a target with more separate features than the heart |
+| `flower8` | 8-petal flower outline |
+| `flower_static` | stage A reference for the flower target |
 | `outline_gap20` | same target with a 20 cm throw instead of 12 cm, testing the `chi` scaling law |
 
 Reproduce any of them (CPU, a few minutes each):

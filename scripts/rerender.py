@@ -26,7 +26,7 @@ from ripple import viz
 from ripple.inverse import correlation_curve
 from ripple.launch import PistonArrayLaunch, VelocityArrayLaunch
 from ripple.optics import caustic_strength, render_caustic
-from ripple.targets import glyph_target
+from ripple.targets import target_from_spec
 from ripple.waves import WaterDomain
 
 
@@ -52,7 +52,7 @@ def main() -> None:
     with torch.no_grad():
         launch.A.copy_(saved["A"].to(launch.A.dtype))
 
-    target_np = glyph_target(cfg["symbol"], N=cfg["N"], mode=cfg["mode"])
+    target_np = target_from_spec(cfg["symbol"], N=cfg["N"], mode=cfg["mode"])
     target = torch.from_numpy(target_np)
     rays = cfg.get("rays_per_cell", 2)
     blur = cfg.get("blur", 1.2)

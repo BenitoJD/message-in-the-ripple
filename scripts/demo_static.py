@@ -27,7 +27,7 @@ import torch
 from ripple import viz
 from ripple.inverse import optimize_static, render_of
 from ripple.optics import caustic_strength
-from ripple.targets import glyph_target
+from ripple.targets import target_from_spec
 from ripple.waves import WaterDomain
 
 
@@ -35,6 +35,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--symbol", default="♥", help="any glyph matplotlib's font can draw")
     p.add_argument("--mode", default="ink", choices=["ink", "outline"])
+    p.add_argument("--flower", type=int, default=0, help="parametric flower with this many petals instead of --symbol")
     p.add_argument("--N", type=int, default=192)
     p.add_argument("--L", type=float, default=0.4)
     p.add_argument("--depth", type=float, default=0.008)
@@ -57,7 +58,9 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
 
     dom = WaterDomain(N=a.N, L=a.L, depth=a.depth)
-    target_np = glyph_target(a.symbol, N=a.N, mode=a.mode)
+    if a.flower:
+        a.symbol = f"flower{a.flower}"
+    target_np = target_from_spec(a.symbol, N=a.N, mode=a.mode)
     target = torch.from_numpy(target_np)
     optics = dict(gap=a.gap, n_water=1.331, blur_px=a.blur, screen_scale=1.0,
                   rays_per_cell=a.rays_per_cell, area_average=True)

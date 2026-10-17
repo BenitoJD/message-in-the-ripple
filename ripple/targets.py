@@ -97,3 +97,59 @@ def glyph_target(symbol: str = "♥", N: int = 192, mode: str = "ink", blur_sigm
     out -= out.min()
     m = out.max()
     return out / m if m > 0 else out
+
+
+def flower_target(
+    N: int = 192,
+    petals: int = 6,
+    petal_len: float = 0.86,
+    petal_wid: float = 0.30,
+    center_r: float = 0.20,
+    blur_sigma: float = 2.0,
+) -> np.ndarray:
+    """A flower silhouette from overlapping elliptical petals (radius 1 field).
+
+    Drawn parametrically rather than with a font so it works anywhere and the
+    petal count/size is a knob: more petals means finer features, which the
+    wave field has to resolve, so it is a direct difficulty control.
+    """
+    x = (np.arange(N)[None, :] + 0.5) / N * 2.0 - 1.0  # columns, -1..1
+    y = 1.0 - (np.arange(N)[:, None] + 0.5) / N * 2.0  # rows, -1..1
+    m = np.zeros((N, N), dtype=np.float64)
+    d = petal_len / 2.0  # petal centre distance from the middle
+    for k in range(petals):
+        th = 2.0 * np.pi * k / petals
+        u = x * np.cos(th) + y * np.sin(th)  # along the petal axis
+        v = -x * np.sin(th) + y * np.cos(th)  # across it
+        ell = ((u - d) / (petal_len / 2.0)) ** 2 + (v / (petal_wid / 2.0)) ** 2 <= 1.0
+        m = np.maximum(m, ell.astype(np.float64))
+    m = np.maximum(m, (np.hypot(x, y) <= center_r).astype(np.float64))
+
+    from PIL import Image, ImageFilter
+
+    img = Image.fromarray((m * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(blur_sigma))
+    out = np.asarray(img, dtype=np.float64) / 255.0
+    m2 = out.max()
+    return out / m2 if m2 > 0 else out
+
+
+def flower_outline_target(N: int = 192, petals: int = 6, **kw) -> np.ndarray:
+    """Edge map of `flower_target` — bright petal outlines, which is the shape
+    family caustics produce most readily (folds are lines)."""
+    blur = kw.pop("blur_sigma", 2.0)
+    t = flower_target(N=N, petals=petals, blur_sigma=max(1.0, blur * 0.6), **kw)
+    return outline_from_bitmap(t, sigma_px=blur)
+
+
+def target_from_spec(spec: str, N: int = 192, mode: str = "ink", blur_sigma: float = 2.5) -> np.ndarray:
+    """Resolve a target from a short spec string.
+
+    "flower" / "flower8"  -> parametric flower with 8 petals (outline by default)
+    anything else         -> glyph rendered from text, as in `glyph_target`
+    """
+    if spec.startswith("flower"):
+        petals = int(spec[6:]) if len(spec) > 6 else 6
+        if mode == "outline":
+            return flower_outline_target(N=N, petals=petals, blur_sigma=blur_sigma + 1.0)
+        return flower_target(N=N, petals=petals, blur_sigma=blur_sigma)
+    return glyph_target(spec, N=N, mode=mode, blur_sigma=blur_sigma)

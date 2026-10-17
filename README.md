@@ -37,6 +37,8 @@ inverse problem need more control than hardware can offer?**
 <!--RESULTS-->
 | run | actuators | corr @ t* | contrast | chi | imprint-only corr | legible window |
 |---|---|---|---|---|---|---|
+| **8-petal flower** outline, 32x32 actuators | 32x32 (1024) | +0.833 | 12.8% | 0.13 | +0.063 | 11 ms |
+| **6-petal flower** outline, 32x32 actuators | 32x32 (1024) | +0.824 | 12.6% | 0.13 | -0.021 | 11 ms |
 | heart **outline**, 32x32 actuators, 20 cm throw | 32x32 (1024) | +0.866 | 12.7% | 0.12 | +0.022 | 11 ms |
 | heart **outline**, 32x32 actuators, 12 cm throw | 32x32 (1024) | +0.812 | 11.9% | 0.12 | +0.008 | 11 ms |
 | filled heart, 32x32 actuators | 32x32 (1024) | +0.413 | 11.6% | 0.12 | +0.066 | 51 ms |
@@ -45,6 +47,7 @@ inverse problem need more control than hardware can offer?**
 | filled heart, 8x8, contrast penalty x10 | 8x8 (64) | +0.104 | 14.8% | 0.36 | +0.142 | 557 ms |
 | *(stage A reference, filled heart: no wave constraint)* | - | +0.469 | 11.9% | 9.75 | - | - |
 | *(stage A reference, heart outline: no wave constraint)* | - | +0.817 | 14.4% | 11.98 | - | - |
+| *(stage A reference, flower outline: no wave constraint)* | - | +0.873 | 12.9% | 9.79 | - | - |
 
 Stage A (the same optics with the surface free to be anything, no wave dynamics) is the ceiling to compare against — a stage C row is only interesting if it approaches its own target's reference.
 <!--RESULTS-->
@@ -123,6 +126,9 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 # the main experiment: optimize a finite launch, render the reveal timeline + GIF
 .venv/bin/python scripts/demo_array.py --symbol "♥" --mode outline --tag outline
+
+# a flower (parametric: petal count is the difficulty knob)
+.venv/bin/python scripts/demo_array.py --flower 8 --mode outline --tag flower8
 
 # other targets / finer or coarser hardware
 .venv/bin/python scripts/demo_array.py --symbol "R" --mode ink --tag letter_R

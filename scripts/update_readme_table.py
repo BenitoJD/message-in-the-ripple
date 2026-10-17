@@ -18,8 +18,10 @@ RESULTS = ROOT / "results"
 README = ROOT / "README.md"
 MARK = "<!--RESULTS-->"
 
-ORDER = ["outline_gap20", "outline", "ink", "coarse16", "coarse8", "coarse8_strong"]
+ORDER = ["flower8", "flower", "outline_gap20", "outline", "ink", "coarse16", "coarse8", "coarse8_strong"]
 TITLES = {
+    "flower8": "**8-petal flower** outline, 32x32 actuators",
+    "flower": "**6-petal flower** outline, 32x32 actuators",
     "outline_gap20": "heart **outline**, 32x32 actuators, 20 cm throw",
     "outline": "heart **outline**, 32x32 actuators, 12 cm throw",
     "ink": "filled heart, 32x32 actuators",
@@ -57,7 +59,7 @@ def main() -> None:
         )
 
     refs = []
-    for tag, label in (("static", "filled heart"), ("static_outline", "heart outline")):
+    for tag, label in (("static", "filled heart"), ("static_outline", "heart outline"), ("flower_static", "flower outline")):
         f = RESULTS / tag / "static_metrics.json"
         if f.exists():
             sm = json.loads(f.read_text())
